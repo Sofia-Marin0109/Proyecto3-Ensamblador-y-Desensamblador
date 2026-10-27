@@ -1,0 +1,10 @@
+# Archivos compilados de Java
+*.class
+
+# Archivos del sistema macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Carpetas de Visual Studio Code
+.vscode/
