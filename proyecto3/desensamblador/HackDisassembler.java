@@ -48,6 +48,8 @@ public class HackDisassembler {
                     validateLine(line);
                 } catch (IllegalArgumentException e) {
                     reportError(lineNumber, e.getMessage(), outputFilePath);
+                } catch (Exception e) { // [NUEVO] Atrapa cualquier otro error inesperado de Java
+                    reportError(lineNumber, e.getMessage(), outputFilePath);
                 }
 
                 instructions.add(line);
@@ -151,7 +153,7 @@ public class HackDisassembler {
         }
     }
 
-        private static void validateLine(String line) {
+    private static void validateLine(String line) {
         // longitud: exactamente 16 (sin trim, un espacio al final tambien es error)
         if (line.length() != 16) {
             throw new IllegalArgumentException("longitud inválida: tiene " + line.length() + " caracteres y deben ser 16");
@@ -169,8 +171,11 @@ public class HackDisassembler {
                 throw new IllegalArgumentException("los bits 14 y 13 de una instrucción C deben ser 11");
             }
             ReverseCode.comp(line.substring(3, 10)); // solo para validar: lanza error si el codigo no existe
+            ReverseCode.dest(line.substring(10, 13)); // [NUEVO] validar el destino también aquí
+            ReverseCode.jump(line.substring(13, 16)); // [NUEVO] validar el salto también aquí
         }
     }
+    
     private static boolean isJumpTarget(List<String> instructions, int i) {
         int n = instructions.size();
         if (i + 1 >= n) {
@@ -197,5 +202,4 @@ public class HackDisassembler {
         new File(outputFilePath).delete(); // por si quedo un .asm de una ejecucion anterior
         System.exit(1);
     }
-
 }

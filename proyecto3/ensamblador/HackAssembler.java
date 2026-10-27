@@ -37,28 +37,7 @@ public class HackAssembler {
                 parserPasada1.advance();
                 
                 if (parserPasada1.instructionType() == null) continue;
-
-                //cuando es etiqueta se guarda el simbolo con la dirección de memoria siguiente
-                if (parserPasada1.instructionType() == Parser.CommandType.LABEL) {
-                    String label = parserPasada1.symbol();
-                    symbolTable.addEntry(label, romAddress);
-                } else {
-                    romAddress++; //solo se suma para instrucciones tipo A o C, los labels no ocupan espacio 
-                }
-            }
-
-            //Segunda pasada, se traducen las variables y el codigo a binario
-            Parser parserPasada2 = new Parser(inputFile);
-            PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath));
-
-            int ramAddress = 16; //a partir de la dirección 16 de la RAM comienzan a guardarse las nuevas variables
-            boolean primeraLinea = true; // para revisar si es la primera linea y poner espacio o no
-            
-            while (parserPasada2.hasMoreLines()) {
-                parserPasada2.advance();
-                
-                if (parserPasada1.instructionType() == null) continue;
-                //todas las revisiones se deben hacer en la primera pasada, para no generar el archivo si hay errores
+        
                 try {
                     parserPasada1.validate(); 
                     //si es comp realiza todas las validaciones
@@ -80,7 +59,21 @@ public class HackAssembler {
                 } catch (IllegalArgumentException e) { // cualquier error de validacion queda aqui
                     reportError(parserPasada1.lineNumber(), e.getMessage(), outputFilePath);
                 }
+            }
 
+            //Segunda pasada, se traducen las variables y el codigo a binario
+            Parser parserPasada2 = new Parser(inputFile);
+            PrintWriter writer = new PrintWriter(new FileWriter(outputFilePath));
+
+            int ramAddress = 16; //a partir de la dirección 16 de la RAM comienzan a guardarse las nuevas variables
+            boolean primeraLinea = true; // para revisar si es la primera linea y poner espacio o no
+            
+            while (parserPasada2.hasMoreLines()) {
+                parserPasada2.advance();
+                
+                if (parserPasada2.instructionType() == null) continue;
+                if (parserPasada2.instructionType() == Parser.CommandType.LABEL) continue;
+                    
                 if (parserPasada2.instructionType() == Parser.CommandType.A_INSTRUCTION) {
                     String symbol = parserPasada2.symbol(); //extraemos lo que va despúes del @
                     int addressValue; //aca va la dirección de memoria correspondiente a el símbolo
@@ -123,12 +116,11 @@ public class HackAssembler {
 
             writer.close();
             System.out.println("Archivo.hack generado: " + outputFilePath);
-
         } catch (IOException e) {
             System.out.println("Error procesando el archivo: " + e.getMessage());
             System.exit(1);
         }
-    } 
+    }
     //formate de error
     private static void reportError(int lineNumber, String message, String outputFilePath) {
         //para mantener un formato sin importar la consola
