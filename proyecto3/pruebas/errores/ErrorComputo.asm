@@ -17,10 +17,10 @@ M=D
     D;JEQ
     @ptr1
     A=M
-    D=   // error
+    D=M   
     @ptr2
     A=M
-    D=M+D   
+    D=M+D   // error
     @ptr1
     A=M
     M=D     

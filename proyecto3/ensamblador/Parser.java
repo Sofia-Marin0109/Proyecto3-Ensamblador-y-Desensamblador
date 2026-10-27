@@ -1,4 +1,4 @@
-package ensamblador;
+package proyecto3.ensamblador;
 
 import java.io.File;
 import java.io.FileNotFoundException;

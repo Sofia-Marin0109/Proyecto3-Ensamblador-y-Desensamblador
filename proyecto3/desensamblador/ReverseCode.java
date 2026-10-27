@@ -1,4 +1,4 @@
-package desensamblador;
+package proyecto3.desensamblador;
 
 //recibe instrucciones de ceros y unos y los devuelve en texto asm
 public class ReverseCode {

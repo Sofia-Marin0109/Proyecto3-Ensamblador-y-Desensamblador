@@ -1,4 +1,4 @@
-package ensamblador;
+package proyecto3.ensamblador;
 
 public class Code {
 

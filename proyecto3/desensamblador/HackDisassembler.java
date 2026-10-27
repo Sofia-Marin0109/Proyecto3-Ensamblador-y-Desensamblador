@@ -1,4 +1,4 @@
-package desensamblador;
+package proyecto3.desensamblador;
 
 import java.io.File;
 import java.io.FileWriter;
